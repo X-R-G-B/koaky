@@ -86,8 +86,8 @@ parseInt :: Parser Int64
 parseInt = (*) <$> parseSign <*> parseUInt
 
 parseSymbol :: Parser Symbol
-parseSymbol = some
-  (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "*/+=-_!<>"))
+parseSymbol = (:) <$> (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ "*/=_!?<>:$%^&~")) <*>
+  many (parseAnyChar (['a'..'z'] ++ ['A'..'Z'] ++ "*/=_!?<>:$%^&~+-.@" ++ ['0'..'9']))
 
 stringToBool :: String -> Bool
 stringToBool "#t" = True

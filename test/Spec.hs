@@ -49,6 +49,11 @@ testParser str tree = case runParser (parseTree) str of
   Nothing -> assertFailure "Parsing failed"
   Just (t, _) -> assertEqual str tree t
 
+testParserFailure :: String -> IO ()
+testParserFailure str = case runParser (parseTree) str of
+  Nothing -> assertEqual str "" ""
+  Just (_, _) -> assertFailure "Parsing succeeded: expected failure"
+
 unitTestsASTParse :: TestTree
 unitTestsASTParse = testGroup "AST Parse Tests"
   [ testCase "(foo abc def hij)" $
@@ -91,6 +96,10 @@ unitTestsASTParse = testGroup "AST Parse Tests"
        testParser "(do (re (mi)) 12)" (List [Symbol "do", List [Symbol "re", List [Symbol "mi"]], Number 12])
   , testCase "(do (re (mi)) 12 (re (mi)))" $
        testParser "(do (re (mi)) 12 (re (mi)))" (List [Symbol "do", List [Symbol "re", List [Symbol "mi"]], Number 12, List [Symbol "re", List [Symbol "mi"]]])
+  , testCase "(define @foo 42)" $
+      testParserFailure "(define @foo 42)"
+  , testCase "(define f@oo 42)" $
+      testParser "(define f@oo 42)" (List [Symbol "define", Symbol "f@oo", Number 42])
   ]
 
 computeAllAST :: Env -> [Tree] -> (Env, [Maybe Result])
