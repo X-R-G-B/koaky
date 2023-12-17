@@ -62,10 +62,10 @@ instance Eq Define where
 ---------- SHOW INSTANCES ----------
 
 instance Show Tree where
-    show (Number a) = "N:'" ++ show a ++ "'"
-    show (Symbol a) = "S:'" ++ a ++ "'"
-    show (Boolean value) = "B: " ++ show value
-    show (List list) = "L: " ++ show list
+    show (Number a) = show a
+    show (Symbol a) = a
+    show (Boolean value) = show value
+    show (List list) = show list
 
 instance Show Env where
     show (Env { defines = def, errors = err, functions = func }) =
